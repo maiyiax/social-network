@@ -1,4 +1,4 @@
-const { Thought } = require('../models');
+const { Thought, User } = require('../models');
 
 const thoughtController = {
 
@@ -33,6 +33,27 @@ const thoughtController = {
     },
 
     // create a new thought (don't forget to push the created thought's _id to the associated user's thoughts array field)
+    addThought({ params, body }, res) {
+        Thought.create(body)
+            .then(({ _id }) => {
+                console.log(_id);
+                console.log(params)
+                return User.findOneAndUpdate(
+                    { _id: params.userId },
+                    { $push: { thoughts: _id} },
+                    { new: true }
+                );
+
+            })
+            .then(dbUserData => {
+                if(!dbUserData) {
+                    res.status(404).json({ message: 'No user found with this id! '});
+                    return;
+                }
+                res.json(dbUserData);
+            })
+            .catch(err => res.json(err));
+    },
 
     // update a thought by its _id
     updateThought({ params, body }, res) {
