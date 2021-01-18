@@ -20,7 +20,7 @@ router
     .route('/:userId')
     .post(addThought);
 
-// add/delete a reaction
+// add a reaction
 router
     .route('/:Id/reactions')
     .post(addReaction);

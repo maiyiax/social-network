@@ -14,10 +14,11 @@ const thoughtController = {
 
     // create a reaction stored in a single thought's reactions array field
     addReaction({ params, body }, res) {
+        console.log(params);
         Thought.findOneAndUpdate(
-            { _id: params.thoughtId },
+            { _id: params.Id },
             { $push: { reactions: body } },
-            { new: true }
+            { new: true, runValidators: true }
         )
             .then(dbThoughtData => {
                 if (!dbThoughtData) {
@@ -38,7 +39,7 @@ const thoughtController = {
         Thought.findOneAndUpdate(
             { _id: params.Id },
             { $pull: { reactions: { reactionId: params.reactionId } } },
-            { new: true }
+            { new: true, runValidators: true }
         )
             .then(dbThoughtData => {
                 if (!dbThoughtData) {
